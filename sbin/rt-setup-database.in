@@ -355,10 +355,19 @@ sub action_insert {
     my ($status, $msg) = RT::Handle->CheckCompatibility( $RT::Handle->dbh, 'insert' );
     return ($status, $msg) unless $status;
 
-    print "Now inserting data.\n";
-    my $file = $args{'datafile'};
-    $file = $RT::EtcPath . "/initialdata" if $init && !$file;
-    $file ||= $args{'datadir'}."/content";
+    my $file;
+
+    if ($args{begin_step}) {
+        print "Now running begin step.\n";
+        $file = $args{'datafile'};
+        $file ||= $args{'datadir'}."/begin";
+    }
+    else {
+        print "Now inserting data.\n";
+        $file = $args{'datafile'};
+        $file = $RT::EtcPath . "/initialdata" if $init && !$file;
+        $file ||= $args{'datadir'}."/content";
+    }
 
     my $individual_id = Data::GUID->new->as_string();
     my %upgrade_data = (
@@ -405,8 +414,10 @@ sub action_insert {
 
     RT->System->AddUpgradeHistory($package => \%upgrade_data);
 
-    my $db_type = RT->Config->Get('DatabaseType');
-    $RT::Handle->Disconnect() unless $db_type eq 'SQLite';
+    if (!$args{begin_step}) {
+        my $db_type = RT->Config->Get('DatabaseType');
+        $RT::Handle->Disconnect() unless $db_type eq 'SQLite';
+    }
 
     return @ret;
 }
@@ -543,6 +554,10 @@ sub action_upgrade {
 
         my %tmp = (%args, datadir => "$base_dir/$v", datafile => undef, backcompat => \@back);
 
+        if ( -e "$base_dir/$v/begin" ) {
+            ( $ret, $msg ) = action_insert( %tmp, begin_step => 1 );
+            return ( $ret, $msg ) unless $ret;
+        }
         if ( -e "$base_dir/$v/schema.$db_type" ) {
             ( $ret, $msg ) = action_schema( %tmp );
             return ( $ret, $msg ) unless $ret;
