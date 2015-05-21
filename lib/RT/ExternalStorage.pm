@@ -61,8 +61,6 @@ RT::ExternalStorage - Store attachments outside the database
 
 =head1 SYNOPSIS
 
-    Set( @Plugins, 'RT::ExternalStorage' );
-
     Set(%ExternalStorage,
         Type => 'Disk',
         Path => '/opt/rt4/var/attachments',
@@ -90,25 +88,7 @@ takes care of moving attachments out of the database at a later time.
 
 =over
 
-=item C<perl Makefile.PL>
-
-=item C<make>
-
-=item C<make install>
-
-May need root permissions
-
 =item Edit your F</opt/rt4/etc/RT_SiteConfig.pm>
-
-If you are using RT 4.2 or greater, add this line:
-
-    Plugin('RT::ExternalStorage');
-
-For RT 4.0, add this line:
-
-    Set(@Plugins, qw(RT::ExternalStorage));
-
-or add C<RT::ExternalStorage> to your existing C<@Plugins> line.
 
 You will also need to configure the C<%ExternalStorage> option,
 depending on how and where you want your data stored; see
