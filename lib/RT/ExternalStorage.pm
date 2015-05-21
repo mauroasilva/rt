@@ -84,42 +84,14 @@ durable to transient failures of cloud connectivity.  The provided
 C<sbin/rt-externalize-attachments> script, to be run regularly via cron,
 takes care of moving attachments out of the database at a later time.
 
-=head1 INSTALLATION
+=head1 SETUP
 
-=over
+=head2 Edit F</opt/rt4/etc/RT_SiteConfig.pm>
 
-=item Edit your F</opt/rt4/etc/RT_SiteConfig.pm>
+You will need to configure the C<%ExternalStorage> option,
+depending on how and where you want your data stored.
 
-You will also need to configure the C<%ExternalStorage> option,
-depending on how and where you want your data stored; see
-L</CONFIGURATION>.
-
-=item Restart your webserver
-
-Restarting the webserver before the next step (extracting existing
-attachments) is important to ensure that files remain available as they
-are extracted.
-
-=item Extract existing attachments
-
-Run C<sbin/rt-externalize-attachments>; this may take some time, depending
-on the existing size of the database.  This task may be safely cancelled
-and re-run to resume.
-
-=item Schedule attachments extraction
-
-Schedule C<sbin/rt-externalize-attachments> to run at regular intervals via
-cron.  For instance, the following F</etc/cron.d/rt> entry will run it
-daily, which may be good to concentrate network or disk usage to times
-when RT is less in use:
-
-    0 0 * * * root /opt/rt4/sbin/rt-externalize-attachments
-
-=back
-
-=head1 CONFIGURATION
-
-This module comes with a number of possible backends; see the
+RT comes with a number of possible storage backends; see the
 documentation in each for necessary configuration details:
 
 =over
@@ -130,7 +102,26 @@ documentation in each for necessary configuration details:
 
 =item L<RT::ExternalStorage::AmazonS3>
 
-=back
+=head2 Restart your webserver
+
+Restarting the webserver before the next step (extracting existing
+attachments) is important to ensure that files remain available as they
+are extracted.
+
+=head2 Extract existing attachments
+
+Run C<sbin/rt-externalize-attachments>; this may take some time, depending
+on the existing size of the database.  This task may be safely cancelled
+and re-run to resume.
+
+=head2 Schedule attachments extraction
+
+Schedule C<sbin/rt-externalize-attachments> to run at regular intervals via
+cron.  For instance, the following F</etc/cron.d/rt> entry will run it
+daily, which may be good to concentrate network or disk usage to times
+when RT is less in use:
+
+    0 0 * * * root /opt/rt4/sbin/rt-externalize-attachments
 
 =head1 CAVEATS
 
