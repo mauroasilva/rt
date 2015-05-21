@@ -154,7 +154,7 @@ documentation in each for necessary configuration details:
 
 =head1 CAVEATS
 
-This extension is not currently compatibile with RT's C<shredder> tool;
+This extension is not currently compatible with RT's C<shredder> tool;
 attachments which are shredded will not be removed from external
 storage.
 
