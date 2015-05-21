@@ -78,6 +78,8 @@ GetOptions(
     'with-USERLOGO',
     'with-HTML-DOC',
 
+    'with-S3', 'with-DROPBOX',
+
     'list-deps',
     'siteinstall!',
     'help|h',
@@ -103,6 +105,8 @@ my %default = (
     'with-DASHBOARDS' => 1,
     'with-USERLOGO' => 1,
     'with-HTML-DOC' => @RT_DEVELOPER@,
+    'with-S3' => 0,
+    'with-DROPBOX' => 0,
 );
 $args{$_} = $default{$_} foreach grep !exists $args{$_}, keys %default;
 
@@ -376,6 +380,14 @@ Convert::Color
 $deps{'HTML-DOC'} = [ text_to_hash( <<'.') ];
 HTML::Entities
 Pod::Simple 3.24
+.
+
+$deps{'S3'} = [ text_to_hash( <<'.') ];
+Amazon::S3
+.
+
+$deps{'DROPBOX'} = [ text_to_hash( <<'.') ];
+File::Dropbox
 .
 
 my %AVOID = (
