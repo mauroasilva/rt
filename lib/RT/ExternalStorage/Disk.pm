@@ -70,7 +70,7 @@ sub Init {
     } elsif (not -e $self->Path) {
         RT->Logger->error("Path provided for local storage (".$self->Path.") does not exist");
         return;
-    } elsif ($self{Write} and not -w $self->Path) {
+    } elsif ($self->{Write} and not -w $self->Path) {
         RT->Logger->error("Path provided for local storage (".$self->Path.") is not writable");
         return;
     }
