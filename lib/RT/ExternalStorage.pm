@@ -52,8 +52,6 @@ use strict;
 
 package RT::ExternalStorage;
 
-our $VERSION = '0.61';
-
 use Digest::SHA qw//;
 
 require RT::ExternalStorage::Backend;
