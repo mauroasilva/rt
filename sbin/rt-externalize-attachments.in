@@ -74,9 +74,8 @@ use Fcntl ':flock';
 exit unless flock main::DATA, LOCK_EX | LOCK_NB;
 
 die "\%ExternalStorage is not configured\n"
-    unless RT->Config->Get("ExternalStorage");
-
-exit unless $RT::ExternalStorage::BACKEND;
+    unless RT->Config->Get("ExternalStorage")
+        && $RT::ExternalStorage::BACKEND;
 
 # pull out the previous high-water mark for each object type
 my $last = RT->System->FirstAttribute("ExternalStorage");
