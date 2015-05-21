@@ -985,6 +985,19 @@ our %META;
             $config->Set( CustomFieldGroupings => %$groups );
         },
     },
+    ExternalStorage => {
+        Type            => 'HASH',
+        PostLoadCheck   => sub {
+            my $self = shift;
+            my %hash = $self->Get('ExternalStorage');
+            return unless keys %hash;
+
+            require RT::ExternalStorage;
+
+            $hash{Write} = $RT::ExternalStorage::WRITE;
+            $RT::ExternalStorage::BACKEND = RT::ExternalStorage::Backend->new( %hash );
+        },
+    },
     ChartColors => {
         Type    => 'ARRAY',
     },

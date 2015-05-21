@@ -133,16 +133,6 @@ storage.
 
 our $BACKEND;
 our $WRITE;
-$RT::Config::META{ExternalStorage} = {
-    Type => 'HASH',
-    PostLoadCheck => sub {
-        my $self = shift;
-        my %hash = $self->Get('ExternalStorage');
-        return unless keys %hash;
-        $hash{Write} = $WRITE;
-        $BACKEND = RT::ExternalStorage::Backend->new( %hash );
-    },
-};
 
 sub Store {
     my $class = shift;
