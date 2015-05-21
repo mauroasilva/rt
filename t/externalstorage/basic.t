@@ -55,9 +55,9 @@ my $dir = RT::ExternalStorage::Test->attachments_dir;
 ok !<$dir/*>, "Attachments directory is empty";
 
 
-ok -e 'sbin/extract-attachments', "Found extract-attachments script";
-ok -x 'sbin/extract-attachments', "extract-attachments is executable";
-ok !system('sbin/extract-attachments'), "extract-attachments ran successfully";
+ok -e 'sbin/rt-externalize-attachments', "Found rt-externalize-attachments script";
+ok -x 'sbin/rt-externalize-attachments', "rt-externalize-attachments is executable";
+ok !system('sbin/rt-externalize-attachments'), "rt-externalize-attachments ran successfully";
 
 @attachs = @{ $ticket->Transactions->First->Attachments->ItemsArrayRef };
 is $attachs[1]->Content, 'test', "Can still get the text part content";

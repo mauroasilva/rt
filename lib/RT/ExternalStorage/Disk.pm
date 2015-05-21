@@ -131,7 +131,7 @@ if the same file appears in multiple transactions, only one copy will be
 stored on disk.
 
 The C<Path> must be readable by the webserver, and writable by the
-C<bin/extract-attachments> script.  Because the majority of the
+C<sbin/rt-externalize-attachments> script.  Because the majority of the
 attachments are in the filesystem, a simple database backup is thus
 incomplete.  It is B<extremely important> that I<backups include the
 on-disk attachments directory>.
