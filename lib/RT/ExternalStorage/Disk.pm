@@ -56,18 +56,22 @@ use File::Path qw//;
 use Role::Basic qw/with/;
 with 'RT::ExternalStorage::Backend';
 
+sub Path {
+    my $self = shift;
+    return $self->{Path};
+}
+
 sub Init {
     my $self = shift;
 
-    my %self = %{$self};
-    if (not $self{Path}) {
+    if (not $self->Path) {
         RT->Logger->error("No path provided for local storage");
         return;
-    } elsif (not -e $self{Path}) {
-        RT->Logger->error("Path provided for local storage ($self{Path}) does not exist");
+    } elsif (not -e $self->Path) {
+        RT->Logger->error("Path provided for local storage (".$self->Path.") does not exist");
         return;
-    } elsif ($self{Write} and not -w $self{Path}) {
-        RT->Logger->error("Path provided for local storage ($self{Path}) is not writable");
+    } elsif ($self{Write} and not -w $self->Path) {
+        RT->Logger->error("Path provided for local storage (".$self->Path.") is not writable");
         return;
     }
 
@@ -79,7 +83,7 @@ sub Get {
     my ($sha) = @_;
 
     $sha =~ m{^(...)(...)(.*)};
-    my $path = $self->{Path} . "/$1/$2/$3";
+    my $path = $self->Path . "/$1/$2/$3";
 
     return (undef, "File does not exist") unless -e $path;
 
@@ -96,7 +100,7 @@ sub Store {
     my ($sha, $content) = @_;
 
     $sha =~ m{^(...)(...)(.*)};
-    my $dir  = $self->{Path} . "/$1/$2";
+    my $dir  = $self->Path . "/$1/$2";
     my $path = "$dir/$3";
 
     return (1) if -f $path;
