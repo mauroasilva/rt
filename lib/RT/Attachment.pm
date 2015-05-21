@@ -1178,7 +1178,7 @@ sub __DependsOn {
     return $self->SUPER::__DependsOn( %args );
 }
 
-sub StoreExternally {
+sub ShouldStoreExternally {
     my $self = shift;
     my $type = $self->ContentType;
     my $length = $self->ContentLength;

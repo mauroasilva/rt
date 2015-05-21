@@ -733,7 +733,7 @@ sub FindDependencies {
     $deps->Add( out => $self->Object );
 }
 
-sub StoreExternally {
+sub ShouldStoreExternally {
     my $self = shift;
     my $type = $self->CustomFieldObj->Type;
     my $length = length($self->LargeContent || '');
