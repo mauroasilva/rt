@@ -178,4 +178,5 @@ for my $class (qw/RT::Attachments RT::ObjectCustomFieldValues/) {
 # update high-water mark for each object type
 RT->System->SetAttribute( Name => "ExternalStorage", Content => $last );
 
+# don't remove; for locking (see call to flock above)
 __DATA__
