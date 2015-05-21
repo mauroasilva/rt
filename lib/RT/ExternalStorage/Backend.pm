@@ -46,7 +46,6 @@
 #
 # END BPS TAGGED BLOCK }}}
 
-use 5.008003;
 use warnings;
 use strict;
 
