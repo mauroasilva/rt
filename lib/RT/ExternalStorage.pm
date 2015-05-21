@@ -184,44 +184,4 @@ my $__DecodeLOB = __PACKAGE__->can('_DecodeLOB');
     return $__DecodeLOB->($self, $ContentType, 'none', $ok, $Filename);
 };
 
-package RT::ObjectCustomFieldValue;
-
-sub StoreExternally {
-    my $self = shift;
-    my $type = $self->CustomFieldObj->Type;
-    my $length = length($self->LargeContent || '');
-
-    return 0 if $length == 0;
-
-    return 1 if $type eq "Binary";
-
-    return 1 if $type eq "Image" and $length > 10 * 1024 * 1024;
-
-    return 0;
-}
-
-package RT::Attachment;
-
-sub StoreExternally {
-    my $self = shift;
-    my $type = $self->ContentType;
-    my $length = $self->ContentLength;
-
-    return 0 if $length == 0;
-
-    if ($type =~ m{^multipart/}) {
-        return 0;
-    } elsif ($type =~ m{^(text|message)/}) {
-        # If textual, we only store externally if it's _large_ (> 10M)
-        return 1 if $length > 10 * 1024 * 1024;
-        return 0;
-    } elsif ($type =~ m{^image/}) {
-        # Ditto images, which may be displayed inline
-        return 1 if $length > 10 * 1024 * 1024;
-        return 0;
-    } else {
-        return 1;
-    }
-}
-
 1;
