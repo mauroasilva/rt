@@ -70,7 +70,7 @@ RT::ExternalStorage - Store attachments outside the database
 
 =head1 DESCRIPTION
 
-By default, RT stores attachments in the database.  This extension moves
+By default, RT stores attachments in the database.  ExternalStorage moves
 all attachments that RT does not need efficient access to (which include
 textual content and images) to outside of the database.  This may either
 be on local disk, or to a cloud storage solution.  This decreases the
@@ -154,7 +154,7 @@ documentation in each for necessary configuration details:
 
 =head1 CAVEATS
 
-This extension is not currently compatible with RT's C<shredder> tool;
+This feature is not currently compatible with RT's C<shredder> tool;
 attachments which are shredded will not be removed from external
 storage.
 
