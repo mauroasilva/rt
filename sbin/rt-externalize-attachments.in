@@ -78,6 +78,7 @@ die "\%ExternalStorage is not configured\n"
 
 exit unless $RT::ExternalStorage::BACKEND;
 
+# pull out the previous high-water mark for each object type
 my $last = RT->System->FirstAttribute("ExternalStorage");
 $last = $last ? $last->Content : {};
 
@@ -174,6 +175,7 @@ for my $class (qw/RT::Attachments RT::ObjectCustomFieldValues/) {
     $last->{$class} = $id;
 }
 
+# update high-water mark for each object type
 RT->System->SetAttribute( Name => "ExternalStorage", Content => $last );
 
 __DATA__
