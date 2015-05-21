@@ -50,12 +50,12 @@ use 5.008003;
 use warnings;
 use strict;
 
-package RT::Extension::ExternalStorage::Disk;
+package RT::ExternalStorage::Disk;
 
 use File::Path qw//;
 
 use Role::Basic qw/with/;
-with 'RT::Extension::ExternalStorage::Backend';
+with 'RT::ExternalStorage::Backend';
 
 sub Init {
     my $self = shift;
@@ -114,7 +114,7 @@ sub Store {
 
 =head1 NAME
 
-RT::Extension::ExternalStorage::Disk - On-disk storage of attachments
+RT::ExternalStorage::Disk - On-disk storage of attachments
 
 =head1 SYNOPSIS
 

@@ -50,21 +50,21 @@ use 5.008003;
 use warnings;
 use strict;
 
-package RT::Extension::ExternalStorage;
+package RT::ExternalStorage;
 
 our $VERSION = '0.61';
 
 use Digest::SHA qw//;
 
-require RT::Extension::ExternalStorage::Backend;
+require RT::ExternalStorage::Backend;
 
 =head1 NAME
 
-RT::Extension::ExternalStorage - Store attachments outside the database
+RT::ExternalStorage - Store attachments outside the database
 
 =head1 SYNOPSIS
 
-    Set( @Plugins, 'RT::Extension::ExternalStorage' );
+    Set( @Plugins, 'RT::ExternalStorage' );
 
     Set(%ExternalStorage,
         Type => 'Disk',
@@ -105,13 +105,13 @@ May need root permissions
 
 If you are using RT 4.2 or greater, add this line:
 
-    Plugin('RT::Extension::ExternalStorage');
+    Plugin('RT::ExternalStorage');
 
 For RT 4.0, add this line:
 
-    Set(@Plugins, qw(RT::Extension::ExternalStorage));
+    Set(@Plugins, qw(RT::ExternalStorage));
 
-or add C<RT::Extension::ExternalStorage> to your existing C<@Plugins> line.
+or add C<RT::ExternalStorage> to your existing C<@Plugins> line.
 
 You will also need to configure the C<%ExternalStorage> option,
 depending on how and where you want your data stored; see
@@ -147,11 +147,11 @@ documentation in each for necessary configuration details:
 
 =over
 
-=item L<RT::Extension::ExternalStorage::Disk>
+=item L<RT::ExternalStorage::Disk>
 
-=item L<RT::Extension::ExternalStorage::Dropbox>
+=item L<RT::ExternalStorage::Dropbox>
 
-=item L<RT::Extension::ExternalStorage::AmazonS3>
+=item L<RT::ExternalStorage::AmazonS3>
 
 =back
 
@@ -172,7 +172,7 @@ $RT::Config::META{ExternalStorage} = {
         my %hash = $self->Get('ExternalStorage');
         return unless keys %hash;
         $hash{Write} = $WRITE;
-        $BACKEND = RT::Extension::ExternalStorage::Backend->new( %hash );
+        $BACKEND = RT::ExternalStorage::Backend->new( %hash );
     },
 };
 

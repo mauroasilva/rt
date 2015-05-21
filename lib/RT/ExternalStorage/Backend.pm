@@ -46,53 +46,44 @@
 #
 # END BPS TAGGED BLOCK }}}
 
-use strict;
+use 5.008003;
 use warnings;
+use strict;
 
-### after: use lib qw(@RT_LIB_PATH@);
-use lib qw(/opt/rt4/local/lib /opt/rt4/lib);
+package RT::ExternalStorage::Backend;
 
-package RT::Extension::ExternalStorage::Test;
+use Role::Basic;
 
-=head2 RT::Extension::ExternalStorage::Test
+requires 'Init';
+requires 'Get';
+requires 'Store';
 
-Initialization for testing.
-
-=cut
-
-use base qw(RT::Test);
-use File::Spec;
-use File::Path 'mkpath';
-
-sub import {
+sub new {
     my $class = shift;
-    my %args  = @_;
+    my %args = @_;
 
-    $args{'requires'} ||= [];
-    if ( $args{'testing'} ) {
-        unshift @{ $args{'requires'} }, 'RT::Extension::ExternalStorage';
+    $class = delete $args{Type};
+    if (not $class) {
+        RT->Logger->error("No storage engine type provided");
+        return undef;
+    } elsif ($class->require) {
     } else {
-        $args{'testing'} = 'RT::Extension::ExternalStorage';
+        my $long = "RT::ExternalStorage::$class";
+        if ($long->require) {
+            $class = $long;
+        } else {
+            RT->Logger->error("Can't load external storage engine $class: $@");
+            return undef;
+        }
     }
 
-    $class->SUPER::import( %args );
-    $class->export_to_level(1);
+    unless ($class->DOES("RT::ExternalStorage::Backend")) {
+        RT->Logger->error("External storage engine $class doesn't implement RT::ExternalStorage::Backend");
+        return undef;
+    }
 
-    require RT::Extension::ExternalStorage;
-}
-
-sub attachments_dir {
-    my $dir = File::Spec->catdir( RT::Test->temp_directory, qw(attachments) );
-    mkpath($dir);
-    return $dir;
-}
-
-sub bootstrap_more_config {
-    my $self = shift;
-    my ($config) = @_;
-
-    my $dir = $self->attachments_dir;
-    print $config qq|Set( %ExternalStorage, Type => 'Disk', Path => '$dir' );\n|;
+    my $self = bless \%args, $class;
+    $self->Init;
 }
 
 1;
