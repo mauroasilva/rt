@@ -150,6 +150,10 @@ sub Store {
     return (1);
 }
 
+sub DirectLinkForObject {
+    return;
+}
+
 RT::Base->_ImportOverlays();
 
 1;

@@ -119,6 +119,10 @@ sub Store {
     return (1);
 }
 
+sub DirectLinkForObject {
+    return;
+}
+
 =head1 NAME
 
 RT::ExternalStorage::Dropbox - Store files in the Dropbox cloud
