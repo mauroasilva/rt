@@ -106,6 +106,7 @@ sub Store {
     my $self = shift;
     my ($sha, $content) = @_;
 
+    # fan out to avoid one gigantic directory which slows down all file access
     $sha =~ m{^(...)(...)(.*)};
     my $dir  = $self->Path . "/$1/$2";
     my $path = "$dir/$3";
