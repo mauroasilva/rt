@@ -180,4 +180,6 @@ C<AccessToken>:
 
 =cut
 
+RT::Base->_ImportOverlays();
+
 1;

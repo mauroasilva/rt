@@ -151,4 +151,6 @@ internal inconsistency.
 
 =cut
 
+RT::Base->_ImportOverlays();
+
 1;

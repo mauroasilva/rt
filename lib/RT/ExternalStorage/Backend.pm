@@ -86,4 +86,6 @@ sub new {
     $self->Init;
 }
 
+RT::Base->_ImportOverlays();
+
 1;
