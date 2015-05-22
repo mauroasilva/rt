@@ -751,7 +751,7 @@ sub ExternalStoreDigest {
     my $self = shift;
 
     return undef if $self->ContentEncoding ne 'external';
-    return $self->LargeContent;
+    return $self->_Value( 'LargeContent' );
 }
 
 RT::Base->_ImportOverlays();
