@@ -54,7 +54,14 @@ package RT::ExternalStorage::AmazonS3;
 use Role::Basic qw/with/;
 with 'RT::ExternalStorage::Backend';
 
-our( $S3 );
+sub S3 {
+    my $self = shift;
+    if (@_) {
+        $self->{S3} = shift;
+    }
+    return $self->{S3};
+}
+
 sub Init {
     my $self = shift;
     my %self = %{$self};
@@ -74,11 +81,12 @@ sub Init {
     }
 
 
-    $S3 = Amazon::S3->new( {
+    my $S3 = Amazon::S3->new( {
         aws_access_key_id     => $self{AccessKeyId},
         aws_secret_access_key => $self{SecretAccessKey},
         retry                 => 1,
     } );
+    $self->S3($S3);
 
     my $buckets = $S3->bucket( $self{Bucket} );
     unless ( $buckets ) {
@@ -103,8 +111,8 @@ sub Get {
     my $self = shift;
     my ($sha) = @_;
 
-    my $ok = $S3->bucket($self->{Bucket})->get_key( $sha );
-    return (undef, "Could not retrieve from AmazonS3:" . $S3->errstr)
+    my $ok = $self->S3->bucket($self->{Bucket})->get_key( $sha );
+    return (undef, "Could not retrieve from AmazonS3:" . $self->S3->errstr)
         unless $ok;
     return ($ok->{value});
 }
@@ -114,11 +122,11 @@ sub Store {
     my ($sha, $content) = @_;
 
     # No-op if the path exists already
-    return (1) if $S3->bucket($self->{Bucket})->head_key( $sha );
+    return (1) if $self->S3->bucket($self->{Bucket})->head_key( $sha );
 
-    $S3->bucket($self->{Bucket})->add_key(
+    $self->S3->bucket($self->{Bucket})->add_key(
         $sha => $content
-    ) or return (undef, "Failed to write to AmazonS3: " . $S3->errstr);
+    ) or return (undef, "Failed to write to AmazonS3: " . $self->S3->errstr);
 
     return (1);
 }
