@@ -889,12 +889,13 @@ sub _DecodeLOB {
     my $Content         = shift;
 
     if ($ContentEncoding eq 'external') {
-        unless ($RT::ExternalStorage::BACKEND) {
+        my $Storage = RT->System->ExternalStorage;
+        unless ($Storage) {
             RT->Logger->error( "Failed to load $Content; external storage not configured" );
             return ("");
         };
 
-        my ($ok, $msg) = $RT::ExternalStorage::BACKEND->Get( $Content );
+        my ($ok, $msg) = $Storage->Get( $Content );
         unless (defined $ok) {
             RT->Logger->error( "Failed to load $Content from external storage: $msg" );
             return ("");

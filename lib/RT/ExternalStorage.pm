@@ -131,7 +131,6 @@ storage.
 
 =cut
 
-our $BACKEND;
 our $WRITE;
 
 sub Store {
@@ -139,11 +138,10 @@ sub Store {
     my $content = shift;
 
     my $key = Digest::SHA::sha256_hex( $content );
-    my ($ok, $msg) = $BACKEND->Store( $key => $content );
+    my ($ok, $msg) = RT->System->ExternalStorage->Store( $key => $content );
     return ($ok, $msg) unless defined $ok;
 
     return ($key);
 }
-
 
 1;

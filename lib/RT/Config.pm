@@ -994,8 +994,12 @@ our %META;
 
             require RT::ExternalStorage;
 
-            $hash{Write} = $RT::ExternalStorage::WRITE;
-            $RT::ExternalStorage::BACKEND = RT::ExternalStorage::Backend->new( %hash );
+            my $backend = RT::ExternalStorage::Backend->new(
+                %hash,
+                Write => $RT::ExternalStorage::WRITE,
+            );
+
+            RT->System->ExternalStorage($backend);
         },
     },
     ChartColors => {
