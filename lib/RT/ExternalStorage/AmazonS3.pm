@@ -54,7 +54,7 @@ package RT::ExternalStorage::AmazonS3;
 use Role::Basic qw/with/;
 with 'RT::ExternalStorage::Backend';
 
-our( $S3, $BUCKET);
+our( $S3 );
 sub Init {
     my $self = shift;
     my %self = %{$self};
