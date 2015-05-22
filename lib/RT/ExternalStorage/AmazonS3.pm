@@ -62,9 +62,14 @@ sub S3 {
     return $self->{S3};
 }
 
+sub Bucket {
+    my $self = shift;
+    return $self->{Bucket};
+}
+
 sub BucketObj {
     my $self = shift;
-    return $self->S3->bucket($self->{Bucket});
+    return $self->S3->bucket($self->Bucket);
 }
 
 sub Init {
@@ -79,7 +84,7 @@ sub Init {
     } elsif (not $self->{SecretAccessKey}) {
         RT->Logger->error("SecretAccessKey not provided for AmazonS3");
         return;
-    } elsif (not $self->{Bucket}) {
+    } elsif (not $self->Bucket) {
         RT->Logger->error("Bucket not provided for AmazonS3");
         return;
     }
@@ -92,18 +97,18 @@ sub Init {
     } );
     $self->S3($S3);
 
-    my $buckets = $S3->bucket( $self->{Bucket} );
+    my $buckets = $S3->bucket( $self->Bucket );
     unless ( $buckets ) {
         RT->Logger->error("Can't list buckets of AmazonS3: ".$S3->errstr);
         return;
     }
-    unless ( grep {$_->bucket eq $self->{Bucket}} @{$buckets->{buckets}} ) {
+    unless ( grep {$_->bucket eq $self->Bucket} @{$buckets->{buckets}} ) {
         my $ok = $S3->add_bucket( {
-            bucket    => $self->{Bucket},
+            bucket    => $self->Bucket,
             acl_short => 'private',
         } );
         unless ($ok) {
-            RT->Logger->error("Can't create new bucket '$self->{Bucket}' on AmazonS3: ".$S3->errstr);
+            RT->Logger->error("Can't create new bucket '".$self->Bucket."' on AmazonS3: ".$S3->errstr);
             return;
         }
     }
