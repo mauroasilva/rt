@@ -54,27 +54,34 @@ package RT::ExternalStorage::Dropbox;
 use Role::Basic qw/with/;
 with 'RT::ExternalStorage::Backend';
 
-our $DROPBOX;
+sub Dropbox {
+    my $self = shift;
+    if (@_) {
+        $self->{Dropbox} = shift;
+    }
+    return $self->{Dropbox};
+}
+
 sub Init {
     my $self = shift;
-    my %self = %{$self};
 
     if (not File::Dropbox->require) {
         RT->Logger->error("Required module File::Dropbox is not installed");
         return;
-    } elsif (not $self{AccessToken}) {
+    } elsif (not $self->{AccessToken}) {
         RT->Logger->error("AccessToken not provided for Dropbox.  Register a new application"
                       . " at https://www.dropbox.com/developers/apps and generate an access token.");
         return;
     }
 
 
-    $DROPBOX = File::Dropbox->new(
+    my $dropbox = File::Dropbox->new(
         oauth2       => 1,
-        access_token => $self{AccessToken},
+        access_token => $self->{AccessToken},
         root         => 'sandbox',
         furlopts     => { timeout => 60 },
     );
+    $self->Dropbox($dropbox);
 
     return $self;
 }
@@ -83,10 +90,12 @@ sub Get {
     my $self = shift;
     my ($sha) = @_;
 
-    open( $DROPBOX, "<", $sha)
+    my $dropbox = $self->Dropbox;
+
+    open( $dropbox, "<", $sha)
         or return (undef, "Failed to retrieve file from dropbox: $!");
-    my $content = do {local $/; <$DROPBOX>};
-    close $DROPBOX;
+    my $content = do {local $/; <$dropbox>};
+    close $dropbox;
 
     return ($content);
 }
@@ -95,14 +104,16 @@ sub Store {
     my $self = shift;
     my ($sha, $content) = @_;
 
-    # No-op if the path exists already.  This forces a metadata read.
-    return (1) if open( $DROPBOX, "<", $sha);
+    my $dropbox = $self->Dropbox;
 
-    open( $DROPBOX, ">", $sha )
+    # No-op if the path exists already.  This forces a metadata read.
+    return (1) if open( $dropbox, "<", $sha);
+
+    open( $dropbox, ">", $sha )
         or return (undef, "Open for write on dropbox failed: $!");
-    print $DROPBOX $content
+    print $dropbox $content
         or return (undef, "Write to dropbox failed: $!");
-    close $DROPBOX
+    close $dropbox
         or return (undef, "Flush to dropbox failed: $!");
 
     return (1);
