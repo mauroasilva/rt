@@ -77,7 +77,7 @@ my $ExternalStorage = RT->System->ExternalStorage;
 die "\%ExternalStorage is not configured\n"
     unless $ExternalStorage;
 
-if ($ExternalStorage->Can('IsWriteable')) {
+if ($ExternalStorage->can('IsWriteable')) {
     my ($ok, $msg) = $ExternalStorage->IsWriteable;
     die $msg if !$ok;
 }

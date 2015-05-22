@@ -51,7 +51,7 @@ is $attachs[3]->Content, 'thing',  "Can get the binary content";
 is $attachs[3]->ContentEncoding, "none", "Content is not encoded";
 ok $attachs[3]->ShouldStoreExternally, "Will store binary data on disk";
 
-my $dir = RT::ExternalStorage::Test->attachments_dir;
+my $dir = RT::Test::ExternalStorage->attachments_dir;
 ok !<$dir/*>, "Attachments directory is empty";
 
 
