@@ -62,6 +62,11 @@ sub S3 {
     return $self->{S3};
 }
 
+sub BucketObj {
+    my $self = shift;
+    return $self->S3->bucket($self->{Bucket});
+}
+
 sub Init {
     my $self = shift;
     my %self = %{$self};
@@ -111,7 +116,7 @@ sub Get {
     my $self = shift;
     my ($sha) = @_;
 
-    my $ok = $self->S3->bucket($self->{Bucket})->get_key( $sha );
+    my $ok = $self->BucketObj->get_key( $sha );
     return (undef, "Could not retrieve from AmazonS3:" . $self->S3->errstr)
         unless $ok;
     return ($ok->{value});
@@ -122,9 +127,9 @@ sub Store {
     my ($sha, $content) = @_;
 
     # No-op if the path exists already
-    return (1) if $self->S3->bucket($self->{Bucket})->head_key( $sha );
+    return (1) if $self->BucketObj->head_key( $sha );
 
-    $self->S3->bucket($self->{Bucket})->add_key(
+    $self->BucketObj->add_key(
         $sha => $content
     ) or return (undef, "Failed to write to AmazonS3: " . $self->S3->errstr);
 
