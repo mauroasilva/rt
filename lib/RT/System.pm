@@ -335,6 +335,16 @@ sub ExternalStorage {
     return $self->{ExternalStorage};
 }
 
+sub ExternalStorageURLFor {
+    my $self = shift;
+    my $Object = shift;
+
+    # external storage not configured
+    return undef if !$self->ExternalStorage;
+
+    return $self->ExternalStorage->DownloadURLFor($Object);
+}
+
 RT::Base->_ImportOverlays();
 
 1;
