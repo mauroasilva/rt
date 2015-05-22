@@ -72,6 +72,8 @@ use RT -init;
 use Fcntl ':flock';
 exit unless flock main::DATA, LOCK_EX | LOCK_NB;
 
+use Digest::SHA qw//;
+
 my $ExternalStorage = RT->System->ExternalStorage;
 
 die "\%ExternalStorage is not configured\n"

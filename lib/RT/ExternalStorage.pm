@@ -51,8 +51,6 @@ use strict;
 
 package RT::ExternalStorage;
 
-use Digest::SHA qw//;
-
 require RT::ExternalStorage::Backend;
 
 =head1 NAME
