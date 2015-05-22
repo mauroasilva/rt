@@ -342,6 +342,9 @@ sub ExternalStorageURLFor {
     # external storage not configured
     return undef if !$self->ExternalStorage;
 
+    # external storage direct links disabled
+    return undef if !RT->Config->Get('ExternalStorageDirectLink');
+
     return $self->ExternalStorage->DownloadURLFor($Object);
 }
 
