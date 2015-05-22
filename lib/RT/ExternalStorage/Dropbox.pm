@@ -119,7 +119,7 @@ sub Store {
     return (1);
 }
 
-sub DirectLinkForObject {
+sub DownloadURLFor {
     return;
 }
 
