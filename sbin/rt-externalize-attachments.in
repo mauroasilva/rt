@@ -144,7 +144,7 @@ for my $class (qw/RT::Attachments RT::ObjectCustomFieldValues/) {
             );
 
             # Attempt to write that out
-            my ($key, $msg) = RT::ExternalStorage->Store( $content );
+            my ($key, $msg) = Store( $content );
             unless ($key) {
                 RT->Logger->error("Failed to store $class $id: $msg");
                 exit 1;
@@ -175,6 +175,16 @@ for my $class (qw/RT::Attachments RT::ObjectCustomFieldValues/) {
 
 # update high-water mark for each object type
 RT->System->SetAttribute( Name => "ExternalStorage", Content => $last );
+
+sub Store {
+    my $content = shift;
+
+    my $key = Digest::SHA::sha256_hex( $content );
+    my ($ok, $msg) = RT->System->ExternalStorage->Store( $key => $content );
+    return ($ok, $msg) unless defined $ok;
+
+    return ($key);
+}
 
 # don't remove; for locking (see call to flock above)
 __DATA__

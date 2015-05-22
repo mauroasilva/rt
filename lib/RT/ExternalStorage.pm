@@ -133,15 +133,4 @@ storage.
 
 our $WRITE;
 
-sub Store {
-    my $class = shift;
-    my $content = shift;
-
-    my $key = Digest::SHA::sha256_hex( $content );
-    my ($ok, $msg) = RT->System->ExternalStorage->Store( $key => $content );
-    return ($ok, $msg) unless defined $ok;
-
-    return ($key);
-}
-
 1;
