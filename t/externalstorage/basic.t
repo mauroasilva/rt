@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use RT::ExternalStorage::Test tests => undef;
+use RT::Test::ExternalStorage tests => undef;
 
 my $queue = RT::Test->load_or_create_queue(Name => 'General');
 ok $queue && $queue->id;
