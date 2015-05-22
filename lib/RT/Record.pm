@@ -888,6 +888,22 @@ sub _DecodeLOB {
     my $ContentEncoding = shift || 'none';
     my $Content         = shift;
 
+    if ($ContentEncoding eq 'external') {
+        unless ($RT::ExternalStorage::BACKEND) {
+            RT->Logger->error( "Failed to load $Content; external storage not configured" );
+            return ("");
+        };
+
+        my ($ok, $msg) = $RT::ExternalStorage::BACKEND->Get( $Content );
+        unless (defined $ok) {
+            RT->Logger->error( "Failed to load $Content from external storage: $msg" );
+            return ("");
+        }
+
+        $Content = $ok;
+        $ContentEncoding = 'none';
+    }
+
     RT::Util::assert_bytes( $Content );
 
     if ( $ContentEncoding eq 'base64' ) {

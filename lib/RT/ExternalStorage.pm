@@ -146,32 +146,4 @@ sub Store {
 }
 
 
-package RT::Record;
-
-no warnings 'redefine';
-my $__DecodeLOB = __PACKAGE__->can('_DecodeLOB');
-*_DecodeLOB = sub {
-    my $self            = shift;
-    my $ContentType     = shift || '';
-    my $ContentEncoding = shift || 'none';
-    my $Content         = shift;
-    my $Filename        = @_;
-
-    return $__DecodeLOB->($self, $ContentType, $ContentEncoding, $Content, $Filename)
-        unless $ContentEncoding eq "external";
-
-    unless ($BACKEND) {
-        RT->Logger->error( "Failed to load $Content; external storage not configured" );
-        return ("");
-    };
-
-    my ($ok, $msg) = $BACKEND->Get( $Content );
-    unless (defined $ok) {
-        RT->Logger->error( "Failed to load $Content from external storage: $msg" );
-        return ("");
-    }
-
-    return $__DecodeLOB->($self, $ContentType, 'none', $ok, $Filename);
-};
-
 1;
