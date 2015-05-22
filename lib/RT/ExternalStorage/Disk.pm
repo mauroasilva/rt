@@ -70,12 +70,19 @@ sub Init {
     } elsif (not -e $self->Path) {
         RT->Logger->error("Path provided for local storage (".$self->Path.") does not exist");
         return;
-    } elsif ($self->{Write} and not -w $self->Path) {
-        RT->Logger->error("Path provided for local storage (".$self->Path.") is not writable");
-        return;
     }
 
     return $self;
+}
+
+sub IsWriteable {
+    my $self = shift;
+
+    if (not -w $self->Path) {
+        return (undef, "Path provided for local storage (".$self->Path.") is not writable");
+    }
+
+    return (1);
 }
 
 sub Get {

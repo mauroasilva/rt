@@ -66,15 +66,21 @@ BEGIN { # BEGIN RT CMD BOILERPLATE
 
 }
 
-BEGIN { $RT::ExternalStorage::WRITE = 1 };
 use RT -init;
 
 # Ensure we only run one of these processes at once
 use Fcntl ':flock';
 exit unless flock main::DATA, LOCK_EX | LOCK_NB;
 
+my $ExternalStorage = RT->System->ExternalStorage;
+
 die "\%ExternalStorage is not configured\n"
-    unless RT->System->ExternalStorage;
+    unless $ExternalStorage;
+
+if ($ExternalStorage->Can('IsWriteable')) {
+    my ($ok, $msg) = $ExternalStorage->IsWriteable;
+    die $msg if !$ok;
+}
 
 # pull out the previous high-water mark for each object type
 my $last = RT->System->FirstAttribute("ExternalStorage");
@@ -180,7 +186,7 @@ sub Store {
     my $content = shift;
 
     my $key = Digest::SHA::sha256_hex( $content );
-    my ($ok, $msg) = RT->System->ExternalStorage->Store( $key => $content );
+    my ($ok, $msg) = $ExternalStorage->Store( $key => $content );
     return ($ok, $msg) unless defined $ok;
 
     return ($key);

@@ -994,11 +994,7 @@ our %META;
 
             require RT::ExternalStorage;
 
-            my $backend = RT::ExternalStorage::Backend->new(
-                %hash,
-                Write => $RT::ExternalStorage::WRITE,
-            );
-
+            my $backend = RT::ExternalStorage::Backend->new(%hash);
             RT->System->ExternalStorage($backend);
         },
     },

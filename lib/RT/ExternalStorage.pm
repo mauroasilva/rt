@@ -131,6 +131,4 @@ storage.
 
 =cut
 
-our $WRITE;
-
 1;
