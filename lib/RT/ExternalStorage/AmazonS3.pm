@@ -67,6 +67,16 @@ sub Bucket {
     return $self->{Bucket};
 }
 
+sub AccessKeyId {
+    my $self = shift;
+    return $self->{AccessKeyId};
+}
+
+sub SecretAccessKey {
+    my $self = shift;
+    return $self->{SecretAccessKey};
+}
+
 sub BucketObj {
     my $self = shift;
     return $self->S3->bucket($self->Bucket);
@@ -78,10 +88,10 @@ sub Init {
     if (not Amazon::S3->require) {
         RT->Logger->error("Required module Amazon::S3 is not installed");
         return;
-    } elsif (not $self->{AccessKeyId}) {
+    } elsif (not $self->AccessKeyId) {
         RT->Logger->error("AccessKeyId not provided for AmazonS3");
         return;
-    } elsif (not $self->{SecretAccessKey}) {
+    } elsif (not $self->SecretAccessKey) {
         RT->Logger->error("SecretAccessKey not provided for AmazonS3");
         return;
     } elsif (not $self->Bucket) {
@@ -91,8 +101,8 @@ sub Init {
 
 
     my $S3 = Amazon::S3->new( {
-        aws_access_key_id     => $self->{AccessKeyId},
-        aws_secret_access_key => $self->{SecretAccessKey},
+        aws_access_key_id     => $self->AccessKeyId,
+        aws_secret_access_key => $self->SecretAccessKey,
         retry                 => 1,
     } );
     $self->S3($S3);
