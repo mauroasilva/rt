@@ -892,7 +892,15 @@ sub _DecodeLOB {
     my $ContentEncoding = shift || 'none';
     my $Content         = shift;
 
-    if ($ContentEncoding eq 'external') {
+    RT::Util::assert_bytes( $Content );
+
+    if ( $ContentEncoding eq 'base64' ) {
+        $Content = MIME::Base64::decode_base64($Content);
+    }
+    elsif ( $ContentEncoding eq 'quoted-printable' ) {
+        $Content = MIME::QuotedPrint::decode($Content);
+    }
+    elsif ( $ContentEncoding eq 'external' ) {
         my $Storage = RT->System->ExternalStorage;
         unless ($Storage) {
             RT->Logger->error( "Failed to load $Content; external storage not configured" );
@@ -905,21 +913,12 @@ sub _DecodeLOB {
             return ("");
         }
 
-        $Content = $ok;
-        $ContentEncoding = 'none';
-    }
-
-    RT::Util::assert_bytes( $Content );
-
-    if ( $ContentEncoding eq 'base64' ) {
-        $Content = MIME::Base64::decode_base64($Content);
-    }
-    elsif ( $ContentEncoding eq 'quoted-printable' ) {
-        $Content = MIME::QuotedPrint::decode($Content);
+        return ($ok);
     }
     elsif ( $ContentEncoding && $ContentEncoding ne 'none' ) {
         return ( $self->loc( "Unknown ContentEncoding [_1]", $ContentEncoding ) );
     }
+
     if ( RT::I18N::IsTextualContentType($ContentType) ) {
         my $entity = MIME::Entity->new();
         $entity->head->add("Content-Type", $ContentType);
