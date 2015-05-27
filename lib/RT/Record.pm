@@ -901,19 +901,20 @@ sub _DecodeLOB {
         $Content = MIME::QuotedPrint::decode($Content);
     }
     elsif ( $ContentEncoding eq 'external' ) {
+        my $Digest = $Content;
         my $Storage = RT->System->ExternalStorage;
         unless ($Storage) {
             RT->Logger->error( "Failed to load $Content; external storage not configured" );
             return ("");
         };
 
-        my ($ok, $msg) = $Storage->Get( $Content );
-        unless (defined $ok) {
-            RT->Logger->error( "Failed to load $Content from external storage: $msg" );
+        ($Content, my $msg) = $Storage->Get( $Digest );
+        unless (defined $Content) {
+            RT->Logger->error( "Failed to load $Digest from external storage: $msg" );
             return ("");
         }
 
-        return ($ok);
+        return ($Content);
     }
     elsif ( $ContentEncoding && $ContentEncoding ne 'none' ) {
         return ( $self->loc( "Unknown ContentEncoding [_1]", $ContentEncoding ) );
