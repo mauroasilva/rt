@@ -114,7 +114,10 @@ sub Init {
             bucket    => $self->Bucket,
             acl_short => 'private',
         } );
-        unless ($ok) {
+        if ($ok) {
+            RT->Logger->debug("Created new bucket '".$self->Bucket."' on AmazonS3");
+        }
+        else {
             RT->Logger->error("Can't create new bucket '".$self->Bucket."' on AmazonS3: ".$S3->errstr);
             return;
         }
