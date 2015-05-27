@@ -166,21 +166,17 @@ Choose B<Dropbox API app> as the type of app.
 
 =item 4.
 
-Choose the B<Files and datastores> as the type of data to store.
+Choose B<Yes>, your application only needs access to files it creates.
 
 =item 5.
 
-Choose B<Yes>, your application only needs access to files it creates.
+Enter a descriptive name -- C<Request Tracker files> is fine.
 
 =item 6.
 
-Enter a descriptive name -- C<Request Tracker files> is fine.
-
-=item 7.
-
 Under C<Generated access token>, click the C<Generate> button.
 
-=item 8.
+=item 7.
 
 Copy the provided value into your F<RT_SiteConfig.pm> file as the
 C<AccessToken>:
