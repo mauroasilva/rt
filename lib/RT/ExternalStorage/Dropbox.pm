@@ -138,7 +138,7 @@ RT::ExternalStorage::Dropbox - Store files in the Dropbox cloud
 This storage option places attachments in the Dropbox shared file
 service.  The files are de-duplicated when they are saved; as such, if
 the same file appears in multiple transactions, only one copy will be
-stored on in Dropbox.
+stored in Dropbox.
 
 Files in Dropbox C<must not be modified or removed>; doing so may cause
 internal inconsistency.  It is also important to ensure that the Dropbox
@@ -147,7 +147,7 @@ its space usage.
 
 =head1 SETUP
 
-In order to use this stoage type, a new application must be registered
+In order to use this storage type, a new application must be registered
 with Dropbox:
 
 =over
