@@ -2576,11 +2576,14 @@ Set($ExternalStorageCutoffSize, 10*1024*1024);
 
 =item C<$ExternalStorageDirectLink>
 
-Certain ExternalStorage backends can serve files over HTTP (such as
-L<RT::ExternalStorage::AmazonS3>). For such backends, RT will link
-directly to those files in external storage. This cuts down download
-time and relieves resource pressure because RT's web server is no longer
-involved in retrieving and then immediately serving each attachment.
+Certain ExternalStorage backends can serve files over HTTP.  For such
+backends, RT will link directly to those files in external storage. This
+cuts down download time and relieves resource pressure because RT's web
+server is no longer involved in retrieving and then immediately serving
+each attachment.
+
+Of the storage engines that RT ships, only
+L<RT::ExternalStorage::AmazonS3> supports this feature.
 
 If you prefer to have RT serve these files (perhaps to maintain an access
 log), you can set this option to false.
