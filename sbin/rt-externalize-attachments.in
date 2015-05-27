@@ -155,7 +155,12 @@ for my $class (qw/RT::Attachments RT::ObjectCustomFieldValues/) {
         $RT::Handle->dbh->begin_work;
         while ( my $a = $attach->Next ) {
             $id = $a->id;
-            next unless $a->ShouldStoreExternally;
+
+            my ($ok, $why) = $a->ShouldStoreExternally;
+            if (!$ok) {
+                RT->Logger->info("Skipping $class $id because: $why");
+                next;
+            }
 
             # Explicitly get bytes (not characters, which ->$column would do)
             my $content = $a->_DecodeLOB(
