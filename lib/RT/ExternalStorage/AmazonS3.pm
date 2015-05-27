@@ -154,6 +154,83 @@ sub DownloadURLFor {
     return;
 }
 
+=head1 NAME
+
+RT::ExternalStorage::AmazonS3 - Store files in Amazon's S3 cloud
+
+=head1 SYNOPSIS
+
+    Set(%ExternalStorage,
+        Type            => 'AmazonS3',
+        AccessKeyId     => '...',
+        SecretAccessKey => '...',
+        Bucket          => '...',
+    );
+
+=head1 DESCRIPTION
+
+This storage option places attachments in the S3 cloud file storage
+service.  The files are de-duplicated when they are saved; as such, if
+the same file appears in multiple transactions, only one copy will be
+stored in S3.
+
+Files in S3 B<must not be modified or removed>; doing so may cause
+internal inconsistency.  It is also important to ensure that the S3
+account used maintains sufficient funds for your RT's B<storage and
+bandwidth> needs.
+
+=head1 SETUP
+
+In order to use this storage type, 
+
+=over
+
+=item 1.
+
+Log into Amazon S3, L<https://aws.amazon.com/s3/>, as the account you wish
+to store files under.
+
+=item 2.
+
+Navigate to "Security Credentials" under your account name in the menu bar.
+
+=item 3.
+
+Open the "Access Keys" pane.
+
+=item 4.
+
+Click "Create New Access Key".
+
+=item 5.
+
+Copy the provided values for Access Key ID and Secret Access Key into
+ your F<RT_SiteConfig.pm> file:
+
+    Set(%ExternalStorage,
+        Type            => 'AmazonS3',
+        AccessKeyId     => '...', # Put Access Key ID between quotes
+        SecretAccessKey => '...', # Put Secret Access Key between quotes
+        Bucket          => '...',
+    );
+
+=item 6.
+
+Set up a Bucket for RT to use. You can either create and configure it
+in the S3 web interface, or let RT create one itself. Either way, tell
+RT what bucket name to use in your F<RT_SiteConfig.pm> file:
+
+    Set(%ExternalStorage,
+        Type            => 'AmazonS3',
+        AccessKeyId     => '...',
+        SecretAccessKey => '...',
+        Bucket          => '...', # Put bucket name between quotes
+    );
+
+=back
+
+=cut
+
 RT::Base->_ImportOverlays();
 
 1;
