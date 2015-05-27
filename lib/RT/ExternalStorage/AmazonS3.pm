@@ -109,7 +109,10 @@ sub Init {
         RT->Logger->error("Can't list buckets of AmazonS3: ".$S3->errstr);
         return;
     }
-    unless ( grep {$_->bucket eq $self->Bucket} @{$buckets->{buckets}} ) {
+
+    my @buckets = $buckets->{buckets} ? @{$buckets->{buckets}} : ($buckets);
+
+    unless ( grep {$_->bucket eq $self->Bucket} @buckets ) {
         my $ok = $S3->add_bucket( {
             bucket    => $self->Bucket,
             acl_short => 'private',
