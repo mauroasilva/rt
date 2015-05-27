@@ -88,17 +88,14 @@ sub Init {
     if (not Amazon::S3->require) {
         RT->Logger->error("Required module Amazon::S3 is not installed");
         return;
-    } elsif (not $self->AccessKeyId) {
-        RT->Logger->error("AccessKeyId not provided for AmazonS3");
-        return;
-    } elsif (not $self->SecretAccessKey) {
-        RT->Logger->error("SecretAccessKey not provided for AmazonS3");
-        return;
-    } elsif (not $self->Bucket) {
-        RT->Logger->error("Bucket not provided for AmazonS3");
-        return;
     }
 
+    for my $key (qw/AccessKeyId SecretAccessKey Bucket/) {
+        if (not $self->$key) {
+            RT->Logger->error("Required option '$key' not provided for AmazonS3 external storage. See the documentation for " . __PACKAGE__ . " for setting up this integration.");
+            return;
+        }
+    }
 
     my $S3 = Amazon::S3->new( {
         aws_access_key_id     => $self->AccessKeyId,

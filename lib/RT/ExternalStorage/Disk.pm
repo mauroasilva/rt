@@ -65,10 +65,10 @@ sub Init {
     my $self = shift;
 
     if (not $self->Path) {
-        RT->Logger->error("No path provided for local storage");
+        RT->Logger->error("Required option 'Path' not provided for Disk external storage.");
         return;
     } elsif (not -e $self->Path) {
-        RT->Logger->error("Path provided for local storage (".$self->Path.") does not exist");
+        RT->Logger->error("Path provided for Disk external storage (".$self->Path.") does not exist");
         return;
     }
 

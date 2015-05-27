@@ -69,7 +69,7 @@ sub Init {
         RT->Logger->error("Required module File::Dropbox is not installed");
         return;
     } elsif (not $self->{AccessToken}) {
-        RT->Logger->error("AccessToken not provided for Dropbox. See the documentation for " . __PACKAGE__ . " for setting up this integration.");
+        RT->Logger->error("Required option 'AccessToken' not provided for Dropbox external storage. See the documentation for " . __PACKAGE__ . " for setting up this integration.");
         return;
     }
 
