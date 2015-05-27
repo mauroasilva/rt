@@ -140,7 +140,7 @@ service.  The files are de-duplicated when they are saved; as such, if
 the same file appears in multiple transactions, only one copy will be
 stored in Dropbox.
 
-Files in Dropbox C<must not be modified or removed>; doing so may cause
+Files in Dropbox B<must not be modified or removed>; doing so may cause
 internal inconsistency.  It is also important to ensure that the Dropbox
 account used has sufficient space for the attachments, and to monitor
 its space usage.
